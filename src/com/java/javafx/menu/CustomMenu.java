@@ -67,10 +67,12 @@ public class CustomMenu extends Application {
 	Text workDone = new Text();
 	FontWeight fWeight;
 	FontPosture fPosture;
+	Thread appThread = Thread.currentThread();
 
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Menu");
+		primaryStage.setResizable(false);
 		BorderPane rootNode = new BorderPane();
 		Scene aScene = new Scene(rootNode, 500, 300);
 		primaryStage.setScene(aScene);
@@ -373,8 +375,10 @@ public class CustomMenu extends Application {
 				byte[] data = textBoxData.getBytes();
 				try (FileOutputStream fout = new FileOutputStream(saveFile)) {
 					for (int i = 0; i < data.length; i++) {
+						if (!appThread.isAlive())
+							System.exit(0);
 						fout.write(data[i]);
-						Thread.sleep(0, 1);
+						Thread.sleep(10, 1);
 						String workDone = ((i + 1) * 100) / data.length + "%";
 						updateMessage(workDone);
 						updateProgress(i + 1, data.length);
